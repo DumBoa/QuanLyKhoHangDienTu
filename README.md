@@ -1,4 +1,3 @@
-# QuanLyKhoHangDienTu
 # Quản lý Kho hàng điện tử
 
 ## Giới thiệu
