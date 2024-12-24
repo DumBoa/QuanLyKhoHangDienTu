@@ -48,4 +48,6 @@ Còn 1 số thiếu sót chức năng.
 - **Email**: [hoanglc645@gmail.com]
 - **Số điện thoại**: [///]
 
+## Giao diện
+- Tham khảo của youtube: hgbaodev - Lập trình viên
 
