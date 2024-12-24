@@ -2,7 +2,9 @@
 
 ## Giới thiệu
 
-Phần mềm Quản lý Kho hàng điện tử là một công cụ được thiết kế nhằm tối ưu hóa việc quản lý hàng hóa trong kho. Phần mềm hỗ trợ các chức năng như theo dõi tình trạng hàng hóa, quản lý nhập kho, xuất kho, và cung cấp các báo cáo chi tiết giúp người dùng đưa ra quyết định hợp lý.
+Phần mềm Quản lý Kho hàng điện tử là một công cụ được thiết kế nhằm tối ưu hóa việc quản lý hàng hóa trong kho. 
+Phần mềm hỗ trợ các chức năng như theo dõi tình trạng hàng hóa, quản lý nhập kho, xuất kho, và cung cấp các báo
+cáo chi tiết giúp người dùng đưa ra quyết định hợp lý.
 
 Còn 1 số thiếu sót chức năng.
 
@@ -50,4 +52,8 @@ Còn 1 số thiếu sót chức năng.
 
 ## Giao diện
 - Tham khảo của youtube: hgbaodev - Lập trình viên
+- 
+# Giao diện đăng nhập 
+- Tham khảo của github: https://github.com/hgbaodev/QuanLyKhoDienThoai
 
+# Việc copy ý tưởng chỉ nhằm mục đích học tập và nghiên cứu.
