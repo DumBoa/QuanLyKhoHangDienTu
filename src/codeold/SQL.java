@@ -1,0 +1,312 @@
+/*
+create database QLKHDT;
+use QLKHDT;
+-- Bảng NHACUNGCAP
+CREATE TABLE NHACUNGCAP (
+  MA_NCC VARCHAR(20) PRIMARY KEY,
+  TEN_NHACUNGCAP VARCHAR(40) NOT NULL,
+  SODIENTHOAI VARCHAR(15), -- Số điện thoại thường tối đa 15 ký tự
+  DIACHI VARCHAR(100) -- Đphieu_nhapịa chỉ nên dài hơn một chút
+);
+
+-- Bảng SANPHAM
+CREATE TABLE SANPHAM (
+  MA_SANPHAM VARCHAR(20) PRIMARY KEY,
+  TEN_SANPHAM VARCHAR(40) NOT NULL,
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0), -- Ràng buộc giá trị không âm
+  XUAT_XU VARCHAR(50), -- Quốc gia có thể dài hơn
+  LOAI_SANPHAM VARCHAR(50),
+  CAN_NANG DECIMAL(10, 2) CHECK (CAN_NANG >= 0), -- Ràng buộc cân nặng không âm
+  MA_NCC VARCHAR(20),
+  FOREIGN KEY (MA_NCC) REFERENCES NHACUNGCAP(MA_NCC) ON DELETE CASCADE
+);
+
+-- Bảng PHIEU_NHAP
+CREATE TABLE PHIEU_NHAP (
+  STT INT AUTO_INCREMENT PRIMARY KEY,
+  MA_PHIEU_NHAP VARCHAR(20) UNIQUE NOT NULL,
+  MA_NCC VARCHAR(20) NOT NULL,
+  NGUOI_TAO VARCHAR(50) NOT NULL, -- Tên người tạo có thể dài hơn
+  THOI_GIAN_TAO DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  TONG_TIEN DECIMAL(15, 2) CHECK (TONG_TIEN >= 0), -- Ràng buộc tổng tiền không âm
+  FOREIGN KEY (MA_NCC) REFERENCES NHACUNGCAP(MA_NCC) ON DELETE CASCADE
+);
+
+-- Bảng NHAPHANG
+CREATE TABLE NHAPHANG (
+  MA_HANG VARCHAR(20) PRIMARY KEY,
+  TEN_HANG VARCHAR(40) NOT NULL,
+  SOLUONG INT CHECK (SOLUONG >= 0), -- Ràng buộc số lượng không âm
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0), -- Ràng buộc đơn giá không âm
+  MA_SANPHAM VARCHAR(20) NOT NULL,
+  MA_PHIEU_NHAP VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE,
+  FOREIGN KEY (MA_PHIEU_NHAP) REFERENCES PHIEU_NHAP(MA_PHIEU_NHAP) ON DELETE CASCADE
+);
+
+-- Bảng XUATHANG
+CREATE TABLE XUATHANG (
+  MA_HANG VARCHAR(20) PRIMARY KEY,
+  TEN_HANG VARCHAR(40) NOT NULL,
+  SOLUONG INT CHECK (SOLUONG >= 0),
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0),
+  MA_SANPHAM VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE
+);
+
+-- Bảng TONKHO
+CREATE TABLE TONKHO (
+  MA_HANG VARCHAR(20) PRIMARY KEY,
+  TEN_HANG VARCHAR(40) NOT NULL,
+  SOLUONG INT CHECK (SOLUONG >= 0),
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0),
+  LOAI_DO_DIEN_TU VARCHAR(50),
+  MA_SANPHAM VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE
+);
+
+-- Bảng THONGKE
+CREATE TABLE THONGKE (
+  STT INT AUTO_INCREMENT PRIMARY KEY,
+  MA_SANPHAM VARCHAR(20) NOT NULL, -- Liên kết với sản phẩm cụ thể
+  TEN_SANPHAM VARCHAR(40) NOT NULL, -- Tên sản phẩm để dễ theo dõi
+  TONG_SOLUONG_NHAP INT DEFAULT 0 CHECK (TONG_SOLUONG_NHAP >= 0), -- Tổng số lượng nhập
+  TONG_SOLUONG_XUAT INT DEFAULT 0 CHECK (TONG_SOLUONG_XUAT >= 0), -- Tổng số lượng xuất
+  MA_NCC VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE -- Liên kết sản phẩm
+);
+
+
+-- Chỉ số bổ sung
+CREATE INDEX idx_ma_phieu_nhap ON PHIEU_NHAP(MA_PHIEU_NHAP);
+CREATE INDEX idx_ma_sanpham ON SANPHAM(MA_SANPHAM);
+
+CREATE TABLE TAIKHOAN(
+  TENDANGNHAP VARCHAR(30) PRIMARY KEY NOT NULL,
+  MATKHAU VARCHAR(30) NOT NULL
+);
+
+////////////////////////////////////////////////////////////////////////////////////
+new 
+create database QLKHDT;
+use QLKHDT;
+-- Bảng NHACUNGCAP
+CREATE TABLE NHACUNGCAP (
+  MA_NCC VARCHAR(20) PRIMARY KEY,
+  TEN_NHACUNGCAP VARCHAR(40) NOT NULL,
+  SODIENTHOAI VARCHAR(15), -- Số điện thoại thường tối đa 15 ký tự
+  DIACHI VARCHAR(100) -- Địa chỉ nên dài hơn một chút
+);
+
+-- Bảng SANPHAM
+CREATE TABLE SANPHAM (
+  MA_SANPHAM VARCHAR(20) PRIMARY KEY,
+  TEN_SANPHAM VARCHAR(40) NOT NULL,
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0), -- Ràng buộc giá trị không âm
+  XUAT_XU VARCHAR(50), -- Quốc gia có thể dài hơn
+  LOAI_SANPHAM VARCHAR(50),
+  CAN_NANG DECIMAL(10, 2) CHECK (CAN_NANG >= 0), -- Ràng buộc cân nặng không âm
+  MA_NCC VARCHAR(20),
+  FOREIGN KEY (MA_NCC) REFERENCES NHACUNGCAP(MA_NCC) ON DELETE CASCADE
+);
+
+-- Bảng PHIEU_NHAP (MA_PHIEU_NHAP làm khóa chính)
+CREATE TABLE PHIEU_NHAP (
+  MA_PHIEU_NHAP VARCHAR(20) PRIMARY KEY, -- Khóa chính
+  MA_NCC VARCHAR(20) NOT NULL,
+  NGUOI_TAO VARCHAR(50) NOT NULL, -- Tên người tạo có thể dài hơn
+  THOI_GIAN_TAO DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  TONG_TIEN DECIMAL(15, 2) CHECK (TONG_TIEN >= 0), -- Ràng buộc tổng tiền không âm
+  FOREIGN KEY (MA_NCC) REFERENCES NHACUNGCAP(MA_NCC) ON DELETE CASCADE
+);
+
+-- Bảng NHAPHANG
+CREATE TABLE NHAPHANG (
+  MA_HANG VARCHAR(20) PRIMARY KEY,
+  TEN_HANG VARCHAR(40) NOT NULL,
+  SOLUONG INT CHECK (SOLUONG >= 0), -- Ràng buộc số lượng không âm
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0), -- Ràng buộc đơn giá không âm
+  MA_SANPHAM VARCHAR(20) NOT NULL,
+  MA_PHIEU_NHAP VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE,
+  FOREIGN KEY (MA_PHIEU_NHAP) REFERENCES PHIEU_NHAP(MA_PHIEU_NHAP) ON DELETE CASCADE
+);
+
+-- Bảng XUATHANG
+CREATE TABLE XUATHANG (
+  MA_HANG VARCHAR(20) PRIMARY KEY,
+  TEN_HANG VARCHAR(40) NOT NULL,
+  SOLUONG INT CHECK (SOLUONG >= 0),
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0),
+  MA_SANPHAM VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE
+);
+
+-- Bảng TONKHO
+CREATE TABLE TONKHO (
+  MA_HANG VARCHAR(20) PRIMARY KEY,
+  TEN_HANG VARCHAR(40) NOT NULL,
+  SOLUONG INT CHECK (SOLUONG >= 0),
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0),
+  LOAI_DO_DIEN_TU VARCHAR(50),
+  MA_SANPHAM VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE
+);
+
+-- Bảng THONGKE
+CREATE TABLE THONGKE (
+  STT INT AUTO_INCREMENT PRIMARY KEY,
+  MA_SANPHAM VARCHAR(20) NOT NULL, -- Liên kết với sản phẩm cụ thể
+  TEN_SANPHAM VARCHAR(40) NOT NULL, -- Tên sản phẩm để dễ theo dõi
+  TONG_SOLUONG_NHAP INT DEFAULT 0 CHECK (TONG_SOLUONG_NHAP >= 0), -- Tổng số lượng nhập
+  TONG_SOLUONG_XUAT INT DEFAULT 0 CHECK (TONG_SOLUONG_XUAT >= 0), -- Tổng số lượng xuất
+  MA_NCC VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE -- Liên kết sản phẩm
+);
+
+-- Chỉ số bổ sung
+CREATE INDEX idx_ma_phieu_nhap ON PHIEU_NHAP(MA_PHIEU_NHAP);
+CREATE INDEX idx_ma_sanpham ON SANPHAM(MA_SANPHAM);
+
+-- Bảng TAIKHOAN
+CREATE TABLE TAIKHOAN (
+  TENDANGNHAP VARCHAR(30) PRIMARY KEY NOT NULL,
+  MATKHAU VARCHAR(30) NOT NULL
+);
+
+//////////////////////////////////////////////////////////////////
+NEWWWWWWWWWWWWWWWWWWWWW
+
+create database QLKHDTR;
+use QLKHDTR;
+-- Bảng NHACUNGCAP
+CREATE TABLE NHACUNGCAP (
+  MA_NCC VARCHAR(20) PRIMARY KEY,
+  TEN_NHACUNGCAP VARCHAR(40) NOT NULL,
+  SODIENTHOAI VARCHAR(15), 
+  DIACHI VARCHAR(100)
+);
+
+-- Bảng SANPHAM
+CREATE TABLE SANPHAM (
+  MA_SANPHAM VARCHAR(20) PRIMARY KEY,
+  TEN_SANPHAM VARCHAR(40) NOT NULL,
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0), 
+  XUAT_XU VARCHAR(50), -- Quốc gia có thể dài hơn
+  LOAI_SANPHAM VARCHAR(50),
+  CAN_NANG DECIMAL(10, 2) CHECK (CAN_NANG >= 0), 
+  MA_NCC VARCHAR(20),
+  FOREIGN KEY (MA_NCC) REFERENCES NHACUNGCAP(MA_NCC) ON DELETE CASCADE
+);
+
+-- Bảng PHIEU_NHAP 
+CREATE TABLE PHIEU_NHAP (
+  MA_PHIEU_NHAP VARCHAR(20) PRIMARY KEY, 
+  MA_NCC VARCHAR(20) NOT NULL,
+  NGUOI_TAO VARCHAR(50) NOT NULL, 
+  THOI_GIAN_TAO DATETIME NOT NULL,
+  TONG_TIEN DECIMAL(15, 2) CHECK (TONG_TIEN >= 0), -- Ràng buộc tổng tiền không âm
+  FOREIGN KEY (MA_NCC) REFERENCES NHACUNGCAP(MA_NCC) ON DELETE CASCADE
+);
+
+-- Bảng NHAPHANG
+CREATE TABLE NHAPHANG (
+  MA_HANG VARCHAR(20) PRIMARY KEY,
+  TEN_HANG VARCHAR(40) NOT NULL,
+  SOLUONG INT CHECK (SOLUONG >= 0), -- Ràng buộc số lượng không âm
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0), -- Ràng buộc đơn giá không âm
+  MA_SANPHAM VARCHAR(20) NOT NULL,
+  MA_PHIEU_NHAP VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE,
+  FOREIGN KEY (MA_PHIEU_NHAP) REFERENCES PHIEU_NHAP(MA_PHIEU_NHAP) ON DELETE CASCADE
+);
+
+-- Bảng XUATHANG
+CREATE TABLE XUATHANG (
+  MA_HANG VARCHAR(20) PRIMARY KEY,
+  TEN_HANG VARCHAR(40) NOT NULL,
+  SOLUONG INT CHECK (SOLUONG >= 0),
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0),
+  MA_SANPHAM VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE
+);
+
+-- Bảng TONKHO
+CREATE TABLE TONKHO (
+  MA_HANG VARCHAR(20) PRIMARY KEY,
+  TEN_HANG VARCHAR(40) NOT NULL,
+  SOLUONG INT CHECK (SOLUONG >= 0),
+  DON_GIA DECIMAL(15, 2) CHECK (DON_GIA >= 0),
+  LOAI_DO_DIEN_TU VARCHAR(50),
+  MA_SANPHAM VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE
+);
+
+-- Bảng THONGKE
+CREATE TABLE THONGKE (
+  STT INT AUTO_INCREMENT PRIMARY KEY,
+  MA_SANPHAM VARCHAR(20) NOT NULL, -- Liên kết với sản phẩm cụ thể
+  TEN_SANPHAM VARCHAR(40) NOT NULL, -- Tên sản phẩm để dễ theo dõi
+  TONG_SOLUONG_NHAP INT DEFAULT 0 CHECK (TONG_SOLUONG_NHAP >= 0), -- Tổng số lượng nhập
+  TONG_SOLUONG_XUAT INT DEFAULT 0 CHECK (TONG_SOLUONG_XUAT >= 0), -- Tổng số lượng xuất
+  MA_NCC VARCHAR(20) NOT NULL,
+  FOREIGN KEY (MA_SANPHAM) REFERENCES SANPHAM(MA_SANPHAM) ON DELETE CASCADE -- Liên kết sản phẩm
+);
+
+-- Chỉ số bổ sung
+CREATE INDEX idx_ma_phieu_nhap ON PHIEU_NHAP(MA_PHIEU_NHAP);
+CREATE INDEX idx_ma_sanpham ON SANPHAM(MA_SANPHAM);
+
+-- Bảng TAIKHOAN
+CREATE TABLE TAIKHOAN (
+  TENDANGNHAP VARCHAR(30) PRIMARY KEY NOT NULL,
+  MATKHAU VARCHAR(30) NOT NULL
+);
+
+
+INSERT INTO NHACUNGCAP (MA_NCC, TEN_NHACUNGCAP, SODIENTHOAI, DIACHI)
+VALUES
+('NCC01', 'Công ty Điện tử ABC', '0912345678', 'Số 123, Đường Cầu Giấy, Phường Dịch Vọng, Quận Cầu Giấy, Hà Nội'),
+('NCC02', 'Công ty Công nghệ DEF', '0987654321', 'Số 456, Đường Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP Hồ Chí Minh'),
+('NCC03', 'Nhà phân phối GHI', '0938123456', 'Số 789, Đường Hải Phòng, Phường Thạch Thang, Quận Hải Châu, Đà Nẵng'),
+('NCC04', 'Công ty TNHH JKL', '0977889900', 'Số 12, Đường 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Cần Thơ'),
+('NCC05', 'Công ty CP Vật liệu Xây dựng MNO', '0913344556', 'Số 15, Đường Nguyễn Văn Cừ, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội'),
+('NCC06', 'Nhà phân phối Thiết bị PQR', '0901122334', 'Số 25, Đường Võ Văn Kiệt, Phường An Lạc, Quận Bình Tân, TP Hồ Chí Minh'),
+('NCC07', 'Công ty TNHH Thương mại STU', '0932456789', 'Số 8, Đường Lê Duẩn, Phường Phú Thuận, Quận Cẩm Lệ, Đà Nẵng'),
+('NCC08', 'Công ty CP Hàng tiêu dùng VWX', '0977643210', 'Số 45, Đường Nguyễn Trãi, Phường 1, Quận 5, TP Hồ Chí Minh'),
+('NCC09', 'Nhà phân phối YZ', '0945678901', 'Số 67, Đường Phan Đình Phùng, Phường Tân Thành, Quận Tân Phú, TP Hồ Chí Minh'),
+('NCC10', 'Công ty TNHH Dịch vụ AA', '0962345678', 'Số 89, Đường Nguyễn Lương Bằng, Phường Tân Phong, Quận 7, TP Hồ Chí Minh'),
+('NCC11', 'Nhà phân phối BB', '0911223344', 'Số 100, Đường Trần Hưng Đạo, Phường Bình Hòa, Quận Thủ Đức, TP Hồ Chí Minh'),
+('NCC12', 'Công ty CP Điện lạnh CC', '0922233445', 'Số 10, Đường Cách Mạng Tháng 8, Phường Bình Trị Đông, Quận Bình Tân, TP Hồ Chí Minh'),
+('NCC13', 'Công ty TNHH Thương mại DD', '0904455667', 'Số 33, Đường Nguyễn Đình Chiểu, Phường Đa Kao, Quận 1, TP Hồ Chí Minh'),
+('NCC14', 'Nhà phân phối EE', '0916677889', 'Số 77, Đường Bạch Đằng, Phường Hòa Thuận, Quận Hải Châu, Đà Nẵng'),
+('NCC15', 'Công ty CP Nội thất FF', '0945566778', 'Số 22, Đường Nguyễn Tri Phương, Phường Vĩnh Trung, Quận Thanh Khê, Đà Nẵng'),
+('NCC16', 'Nhà phân phối GG', '0937788990', 'Số 14, Đường Quang Trung, Phường Lê Lợi, Quận Sơn Trà, Đà Nẵng'),
+('NCC17', 'Công ty TNHH Sản xuất HH', '0978899001', 'Số 27, Đường Lê Hồng Phong, Phường An Phú, Quận 2, TP Hồ Chí Minh'),
+('NCC18', 'Công ty CP Thực phẩm II', '0934455667', 'Số 55, Đường Hoàng Diệu, Phường 9, Quận 4, TP Hồ Chí Minh'),
+('NCC19', 'Nhà phân phối JJ', '0915566778', 'Số 18, Đường Hai Bà Trưng, Phường 1, Quận Bình Thạnh, TP Hồ Chí Minh'),
+('NCC20', 'Công ty TNHH Kinh doanh KK', '0923344556', 'Số 60, Đường Lý Tự Trọng, Phường Bến Nghé, Quận 1, TP Hồ Chí Minh');
+INSERT INTO SANPHAM (MA_SANPHAM, TEN_SANPHAM, DON_GIA, XUAT_XU, LOAI_SANPHAM, CAN_NANG, MA_NCC)
+VALUES
+('SP001', 'Laptop Dell Inspiron', 15000000, 'USA', 'Laptop', 1.5, 'NCC01'),
+('SP002', 'iPhone 14 Pro Max', 35000000, 'USA', 'Điện thoại', 0.2, 'NCC02'),
+('SP003', 'Tivi Samsung 55 Inch', 12000000, 'Korea', 'Tivi', 10.5, 'NCC03'),
+('SP004', 'Tai nghe Sony WH-1000XM5', 7000000, 'Japan', 'Tai nghe', 0.3, 'NCC04'),
+('SP005', 'Chuột Logitech G502', 1500000, 'Switzerland', 'Chuột', 0.2, 'NCC05'),
+('SP006', 'Bàn phím cơ Razer BlackWidow', 3000000, 'USA', 'Bàn phím', 1.2, 'NCC06'),
+('SP007', 'Loa Bluetooth JBL Charge 5', 2500000, 'USA', 'Loa', 0.8, 'NCC07'),
+('SP008', 'Máy ảnh Canon EOS 90D', 35000000, 'Japan', 'Máy ảnh', 1.6, 'NCC08'),
+('SP009', 'Điều hòa Daikin 1.5 HP', 12000000, 'Japan', 'Điều hòa', 35.0, 'NCC09'),
+('SP010', 'Đồng hồ thông minh Apple Watch', 10000000, 'USA', 'Đồng hồ', 0.1, 'NCC10'),
+('SP011', 'Máy chiếu Epson EB-X06', 15000000, 'Japan', 'Máy chiếu', 2.5, 'NCC01'),
+('SP012', 'Ổ cứng di động WD My Passport 1TB', 2000000, 'USA', 'Ổ cứng', 0.5, 'NCC02'),
+('SP013', 'Router Wifi TP-Link Archer AX50', 3000000, 'China', 'Router', 0.8, 'NCC03'),
+('SP014', 'Camera an ninh Hikvision DS-2CD2023G0-I', 4000000, 'China', 'Camera', 0.6, 'NCC04'),
+('SP015', 'Máy in HP LaserJet Pro MFP', 5000000, 'USA', 'Máy in', 8.0, 'NCC05'),
+('SP016', 'Pin sạc dự phòng Anker 20.000mAh', 800000, 'China', 'Pin sạc dự phòng', 0.4, 'NCC06'),
+('SP017', 'Tablet Samsung Galaxy Tab S8', 20000000, 'Korea', 'Tablet', 0.5, 'NCC07'),
+('SP018', 'Smart TV LG 65 Inch', 25000000, 'Korea', 'Tivi', 15.0, 'NCC08'),
+('SP019', 'Microphone Rode NT1-A', 7000000, 'Australia', 'Micro', 0.7, 'NCC09'),
+('SP020', 'Máy hút bụi Dyson V12', 15000000, 'UK', 'Máy hút bụi', 2.5, 'NCC10');
+
+*/
