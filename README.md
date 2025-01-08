@@ -52,8 +52,9 @@ Còn 1 số thiếu sót chức năng.
 
 ## Giao diện
 - Tham khảo của youtube: hgbaodev - Lập trình viên
-- 
+  
 # Giao diện đăng nhập 
 - Tham khảo của github: https://github.com/hgbaodev/QuanLyKhoDienThoai
 
 # Việc copy ý tưởng chỉ nhằm mục đích học tập và nghiên cứu.
+# Sản phẩm này tạo ra không nhằm mục đích thương mại
